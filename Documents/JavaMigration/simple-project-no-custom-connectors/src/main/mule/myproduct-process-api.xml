@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2b220eb6-b6a1-467e-ab57-f859b8f60470" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="myproduct-process-apiFlow" doc:id="a688ef4c-9321-4c49-947e-5bda0cc39c97" >
+		<http:listener doc:name="Listener" doc:id="37c7e4e1-2f21-493e-8da0-8078fc831024" config-ref="HTTP_Listener_config" path="/api/orders"/>
+		<logger level="INFO" doc:name="Logger - order id" doc:id="39bc295a-11cb-46b1-b0ee-72f274bfd7f3" message="request received - #[attributes.queryParams.'id']"/>
+		<ee:transform doc:name="order id vars" doc:id="c27cc3ed-2c27-4b6e-8820-dfab33b4a963" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="orderId" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.queryParams.'id' as Number]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="calling product and users" doc:id="2b26430c-927f-460b-bb19-97ac7feedeab" name="main-logic"/>
+	</flow>
+	<flow name="main-logic" doc:id="b12ac997-742d-4c8c-a365-10d064291031" >
+		<scatter-gather doc:name="Scatter-Gather" doc:id="c52ae68e-522a-49b0-b95e-759a757a2b58" >
+			<route >
+				<http:request method="GET" doc:name="Request - users" doc:id="afc60f94-0ca3-4324-a20b-daff849a0af7" url="https://dummy-user-sys-api-rrvdjo.rajrd4-1.usa-e1.cloudhub.io/api/users"/>
+			</route>
+			<route >
+				<http:request method="GET" doc:name="Request - products" doc:id="ba066205-41aa-4614-b727-1447daba7dbd" url="https://dummy-product-sys-api-rrvdjo.rajrd4-1.usa-e1.cloudhub.io/api/products"/>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="final payload" doc:id="94616498-d7af-44c9-9e3f-4fef9a333db4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+(payload."1".payload.products  filter ($.id == vars.orderId))
+++
+(payload."0".payload.users  filter ($.id == vars.orderId))
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

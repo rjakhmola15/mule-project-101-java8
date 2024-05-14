@@ -1,0 +1,5 @@
+org/mule/extension/add2numbers/internal/DemoConnectionProvider.class
+org/mule/extension/add2numbers/internal/DemoConnection.class
+org/mule/extension/add2numbers/internal/DemoExtension.class
+org/mule/extension/add2numbers/internal/DemoConfiguration.class
+org/mule/extension/add2numbers/internal/DemoOperations.class

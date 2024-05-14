@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.demoMule.connector</groupId>
+	<artifactId>add-2-numbers</artifactId>
+	<version>1.0.0</version>
+	<packaging>mule-extension</packaging>
+	<name>Demo Extension</name>
+
+	<parent>
+		<groupId>org.mule.extensions</groupId>
+		<artifactId>mule-modules-parent</artifactId>
+		<version>1.1.10</version>
+	</parent>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- changes for java 17 migration -->
+	<!--<dependencies>
+		<dependency>
+			<groupId>org.mule.sdk</groupId>
+			<artifactId>mule-sdk-api</artifactId>
+			<version>0.8.1</version>
+		</dependency>
+		</dependencies>
+		   -->
+
+</project>
